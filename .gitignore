@@ -36,6 +36,13 @@ build/Release
 node_modules/
 jspm_packages/
 
+# Environment variables
+.env*.local
+!.env.example
+
+# Vercel
+.vercel
+
 # Typescript v1 declaration files
 typings/
 

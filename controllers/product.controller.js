@@ -8,6 +8,7 @@ import {
   // cloudinaryDeleteImage,
 } from "../utils/cloudinary.js";
 import { populate } from "dotenv";
+import connectToDatabase from "../database/mongodb.js";
 
 // Create a new product
 // export const createProduct = asyncHandler(async (req, res, next) => {
@@ -71,6 +72,7 @@ import { populate } from "dotenv";
 
 // Create a new product
 export const createProduct = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const {
       name,
@@ -164,6 +166,7 @@ export const createProduct = asyncHandler(async (req, res, next) => {
 
 // Get all products
 export const getProducts = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const {
       collections,
@@ -285,6 +288,7 @@ export const getProducts = asyncHandler(async (req, res, next) => {
 
 // Get a single product
 export const getProduct = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const product = await Product.findById(req.params.id)
       .populate("category")
@@ -308,6 +312,7 @@ export const getProduct = asyncHandler(async (req, res, next) => {
 
 // Update a product
 export const updateProduct = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const {
       name,
@@ -420,6 +425,7 @@ export const updateProduct = asyncHandler(async (req, res, next) => {
 
 // Delete a product
 export const deleteProduct = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
@@ -439,6 +445,7 @@ export const deleteProduct = asyncHandler(async (req, res, next) => {
 
 // Upload product images
 export const uploadProductImages = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { id } = req.params;
 
@@ -542,6 +549,7 @@ export const uploadProductImages = asyncHandler(async (req, res, next) => {
 
 // Update product images
 export const updateProductImages = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { id } = req.params;
 
@@ -601,6 +609,7 @@ export const updateProductImages = asyncHandler(async (req, res, next) => {
 
 // Delete product images
 export const deleteProductImages = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { id } = req.params;
 
@@ -655,6 +664,7 @@ export const deleteProductImages = asyncHandler(async (req, res, next) => {
 
 // Update product variant quantities
 export const updateProductQuantities = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { id } = req.params;
     const { variants } = req.body; // Expected format: [{ size: "M", color: "Red", countInStock: 10 }, ...]

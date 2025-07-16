@@ -1,9 +1,11 @@
 import Coupon from "../models/coupon.model.js";
 import asyncHandler from "../middlewares/async.midleware.js";
 import Product from "../models/product.model.js";
+import connectToDatabase from "../database/mongodb.js";
 
 // Create a new coupon
 export const createCoupon = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { name, expiry, discount } = req.body;
     const existingcoupon = await Coupon.findOne({ name });
@@ -32,6 +34,7 @@ export const createCoupon = asyncHandler(async (req, res, next) => {
 
 // Get all coupons
 export const getCoupons = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const coupons = await Coupon.find();
     res.status(200).json({
@@ -48,6 +51,7 @@ export const getCoupons = asyncHandler(async (req, res, next) => {
 
 // Get a single coupon
 export const getCoupon = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const coupon = await Coupon.findById(req.params.id);
     if (!coupon) {
@@ -69,6 +73,7 @@ export const getCoupon = asyncHandler(async (req, res, next) => {
 
 // Update a coupon
 export const updateCoupon = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { name, expiry, discount } = req.body;
 
@@ -97,6 +102,7 @@ export const updateCoupon = asyncHandler(async (req, res, next) => {
 
 // Delete a coupon
 export const deleteCoupon = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const coupon = await Coupon.findById(req.params.id);
     if (!coupon) {
@@ -123,6 +129,7 @@ export const deleteCoupon = asyncHandler(async (req, res, next) => {
 });
 
 export const getCouponByName = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { name } = req.params;
     const coupon = await Coupon.findOne({ name });

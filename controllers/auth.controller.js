@@ -6,8 +6,10 @@ import crypto from "crypto";
 import transporter from "../config/nodemailer.js"
 import { JWT_EXPIRES_IN, JWT_SECRET, NODE_ENV } from "../config/env.js";
 import jwt from "jsonwebtoken";
+import connectToDatabase from "../database/mongodb.js";
 
 export const signUp = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { name, email, password, role, phone } = req.body;
 
@@ -52,6 +54,7 @@ export const signUp = asyncHandler(async (req, res, next) => {
 });
 
 export const signIn = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { email, password } = req.body;
 
@@ -85,6 +88,7 @@ export const signIn = asyncHandler(async (req, res, next) => {
 });
 
 export const signOut = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     res.cookie("jwt", "", {
       httyOnly: true,
@@ -105,6 +109,7 @@ export const signOut = asyncHandler(async (req, res, next) => {
 });
 
 export const verifyEmail = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { email, verificationCode, password } = req.body;
 
@@ -139,6 +144,7 @@ export const verifyEmail = asyncHandler(async (req, res, next) => {
 });
 
 export const refreshToken = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   const { refreshJwt } = req.cookies;
 
   if (!refreshJwt) {

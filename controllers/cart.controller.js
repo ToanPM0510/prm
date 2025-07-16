@@ -1,9 +1,11 @@
 import Product from "../models/product.model.js";
 import asyncHandler from "../middlewares/async.midleware.js";
 import Cart from "../models/cart.model.js";
+import connectToDatabase from "../database/mongodb.js";
 
 // Add a product to the cart
 export const addToCart = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { productId, size, color, quantity } = req.body;
     const product = await Product.findById(productId);
@@ -93,6 +95,7 @@ export const addToCart = asyncHandler(async (req, res, next) => {
 
 // Update the quantity of a product in the cart
 export const updateCart = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { productId, size, color, quantity } = req.body;
     const cart = await Cart.findOne({ user: req.user._id });
@@ -140,6 +143,7 @@ export const updateCart = asyncHandler(async (req, res, next) => {
 
 // Get the cart
 export const getCart = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const cart = await Cart.findOne({ user: req.user._id });
     if (!cart) {
@@ -171,6 +175,7 @@ export const getCart = asyncHandler(async (req, res, next) => {
 
 // Remove a product from the cart
 export const removeFromCart = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { productId, size, color } = req.body;
     const cart = await Cart.findOne({ user: req.user._id });

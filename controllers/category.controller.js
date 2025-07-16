@@ -1,9 +1,11 @@
 import Category from "../models/category.model.js";
 import asyncHandler from "../middlewares/async.midleware.js";
 import Product from "../models/product.model.js";
+import connectToDatabase from "../database/mongodb.js";
 
 // Create a new category
 export const createCategory = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { name } = req.body;
     const existingCategory = await Category.findOne({ name });
@@ -28,6 +30,7 @@ export const createCategory = asyncHandler(async (req, res, next) => {
 
 // Get all categories
 export const getCategories = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const categories = await Category.find();
     res.status(200).json({
@@ -44,6 +47,7 @@ export const getCategories = asyncHandler(async (req, res, next) => {
 
 // Get a single category
 export const getCategory = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const category = await Category.findById(req.params.id);
     if (!category) {
@@ -65,6 +69,7 @@ export const getCategory = asyncHandler(async (req, res, next) => {
 
 // Update a category
 export const updateCategory = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const category = await Category.findById(req.params.id);
     if (!category) {
@@ -88,6 +93,7 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
 
 // Delete a category
 export const deleteCategory = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const category = await Category.findById(req.params.id);
     if (!category) {

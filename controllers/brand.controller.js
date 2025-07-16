@@ -1,9 +1,11 @@
 import Brand from "../models/brand.model.js";
 import asyncHandler from "../middlewares/async.midleware.js";
 import Product from "../models/product.model.js";
+import connectToDatabase from "../database/mongodb.js";
 
 // Create a new brand
 export const createBrand = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { name } = req.body;
     const existingBrand = await Brand.findOne({ name });
@@ -28,6 +30,7 @@ export const createBrand = asyncHandler(async (req, res, next) => {
 
 // Get all brands
 export const getBrands = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const brands = await Brand.find();
     res.status(200).json({
@@ -44,6 +47,7 @@ export const getBrands = asyncHandler(async (req, res, next) => {
 
 // Get a single brand
 export const getBrand = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const brand = await Brand.findById(req.params.id);
     if (!brand) {
@@ -65,6 +69,7 @@ export const getBrand = asyncHandler(async (req, res, next) => {
 
 // Update a brand
 export const updateBrand = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const brand = await Brand.findById(req.params.id);
     if (!brand) {
@@ -88,6 +93,7 @@ export const updateBrand = asyncHandler(async (req, res, next) => {
 
 // Delete a brand
 export const deleteBrand = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const brand = await Brand.findById(req.params.id);
     if (!brand) {

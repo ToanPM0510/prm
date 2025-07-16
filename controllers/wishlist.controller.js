@@ -2,9 +2,11 @@ import Product from "../models/product.model.js";
 import asyncHandler from "../middlewares/async.midleware.js";
 import Wishlist from "../models/wishlist.model.js";
 import Cart from "../models/cart.model.js";
+import connectToDatabase from "../database/mongodb.js";
 
 // Add a product to the wishlist
 export const addToWishlist = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { productId, size, color } = req.body;
     const product = await Product.findById(productId);
@@ -89,6 +91,7 @@ export const addToWishlist = asyncHandler(async (req, res, next) => {
 
 // Get the wishlist
 export const getWishlist = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const wishlist = await Wishlist.findOne({ user: req.user._id });
     if (!wishlist) {
@@ -119,6 +122,7 @@ export const getWishlist = asyncHandler(async (req, res, next) => {
 
 // Remove a product from the wishlist
 export const removeFromWishlist = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { productId, size, color } = req.body;
     const wishlist = await Wishlist.findOne({ user: req.user._id });

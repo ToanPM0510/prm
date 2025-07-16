@@ -1,8 +1,10 @@
 import asyncHandler from "../middlewares/async.midleware.js";
 import Address from "../models/address.model.js";
 import mongoose from 'mongoose';
+import connectToDatabase from "../database/mongodb.js";
 
 export const getAddressList = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const addresses = await Address.find({ user: req.user._id });
     
@@ -26,6 +28,7 @@ export const getAddressList = asyncHandler(async (req, res, next) => {
 
 // 🟢 Tạo địa chỉ mới
 export const createAddress = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { fullName, phone, location, city, country } = req.body;
     const userId = req.user._id;
@@ -55,6 +58,7 @@ export const createAddress = asyncHandler(async (req, res, next) => {
 });
 
 export const updateAddress = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { addressId } = req.params;
     const { fullName, phone, location, city, country, isDefault } = req.body;
@@ -95,6 +99,7 @@ export const updateAddress = asyncHandler(async (req, res, next) => {
 });
 
 export const deleteAddress = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { addressId } = req.params;
     const userId = req.user._id;

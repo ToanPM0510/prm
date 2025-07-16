@@ -6,8 +6,10 @@ import mongoose from "mongoose";
 import Coupon from "../models/coupon.model.js";
 import Address from "../models/address.model.js";
 import Cart from "../models/cart.model.js";
+import connectToDatabase from "../database/mongodb.js";
 
 export const createOrder = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const {
       orderItems,
@@ -155,6 +157,7 @@ export const createOrder = asyncHandler(async (req, res, next) => {
 });
 
 export const createOrderNow = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const {
       orderItems,
@@ -294,6 +297,7 @@ export const createOrderNow = asyncHandler(async (req, res, next) => {
 });
 
 export const getOrderByUserId = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { userId } = req.params;
     let { page, limit } = req.query;
@@ -351,6 +355,7 @@ export const getOrderByUserId = asyncHandler(async (req, res, next) => {
 });
 
 export const getOrders = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const orders = await Order.find().populate(
       "user orderItems address coupon"
@@ -375,6 +380,7 @@ export const getOrders = asyncHandler(async (req, res, next) => {
 });
 
 export const getOrdersPaging = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { page = 1, limit = 10, user, minPrice, maxPrice } = req.query;
     const filter = {};
@@ -418,6 +424,7 @@ export const getOrdersPaging = asyncHandler(async (req, res, next) => {
 });
 
 export const getOrderById = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { id } = req.params;
 
@@ -451,6 +458,7 @@ export const getOrderById = asyncHandler(async (req, res, next) => {
 });
 
 export const deleteOrderById = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { id } = req.params;
 

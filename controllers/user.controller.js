@@ -5,8 +5,10 @@ import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { generateEmailTemplate } from "../utils/email-template.js";
+import connectToDatabase from "../database/mongodb.js";
 
 export const getUsers = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const users = await User.find();
 
@@ -17,6 +19,7 @@ export const getUsers = asyncHandler(async (req, res, next) => {
 });
 
 export const getUser = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const user = await User.findById(req.params.id).select("-password");
 
@@ -26,13 +29,14 @@ export const getUser = asyncHandler(async (req, res, next) => {
       throw error;
     }
 
-    res.status(200).json({  user: user });
+    res.status(200).json({ user: user });
   } catch (error) {
     next(error);
   }
 });
 
 export const deleteUserByID = asyncHandler(async (req, res) => {
+  await connectToDatabase();
   const user = await User.findById(req.params.id);
 
   if (user) {
@@ -49,6 +53,7 @@ export const deleteUserByID = asyncHandler(async (req, res) => {
 });
 
 export const updateUserByID = asyncHandler(async (req, res) => {
+  await connectToDatabase();
   const user = await User.findById(req.params.id);
 
   if (user) {
@@ -67,6 +72,7 @@ export const updateUserByID = asyncHandler(async (req, res) => {
 });
 
 export const forgotPassword = asyncHandler(async (req, res, next) => {
+  await connectToDatabase();
   try {
     const { email } = req.body;
 
@@ -88,7 +94,7 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
       subject: "Sneaker Shop: Reset Password",
       // text:`xxxx ${process.env.CLIENT_URL}/reset_password/${token}`
       // text: `Please reset your password by clicking the following link: ${process.env.FE_URL}/reset_password?token=${token}`,
-      html: generateEmailTemplate({userEmail:email,resetToken:token}),
+      html: generateEmailTemplate({ userEmail: email, resetToken: token }),
     };
 
     await transporter.sendMail(receiver);
@@ -99,6 +105,7 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
 });
 
 export const resetPassword = asyncHandler(async (req, res) => {
+  await connectToDatabase();
   try {
     const { token } = req.params;
     const { password } = req.body;

@@ -1,6 +1,14 @@
 import { config } from "dotenv";
 
-config({ path: `.env.${process.env.NODE_ENV || "development"}.local` });
+// Load appropriate env file based on environment
+const envFile = process.env.NODE_ENV === "production" 
+  ? ".env.production.local" 
+  : `.env.${process.env.NODE_ENV || "development"}.local`;
+
+// For Vercel, we don't need to load from file since env vars are set directly
+if (process.env.NODE_ENV !== "production") {
+  config({ path: envFile });
+}
 
 export const {
   PORT = 5500,

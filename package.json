@@ -5,7 +5,12 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "build": "echo 'Build completed'",
+    "vercel-build": "echo 'Vercel build completed'"
+  },
+  "engines": {
+    "node": ">=18.x"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

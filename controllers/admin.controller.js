@@ -13,8 +13,11 @@ import {
   convertGroupDateToString,
 } from "../utils/dateReport-admin.js";
 import dayjs from "dayjs";
+import connectToDatabase from "../database/mongodb.js";
+
 export const getAllUsers = async (req, res, next) => {
   try {
+    await connectToDatabase();
     const list = await User.find();
 
     if (list.length > 0) {
@@ -38,6 +41,7 @@ export const getAllUsers = async (req, res, next) => {
 
 export const getAllProducts = async (req, res, next) => {
   try {
+    await connectToDatabase();
     const list = await Product.find();
 
     if (list.length > 0) {
@@ -61,6 +65,7 @@ export const getAllProducts = async (req, res, next) => {
 
 export const getAllOrders = async (req, res, next) => {
   try {
+    await connectToDatabase();
     const list = await Order.aggregate([
       {
         $lookup: {
@@ -96,6 +101,7 @@ export const getRevenue = asyncHandler(async (req, res, next) => {
   //param: fromDate, toDate, type, limit, page
 
   try {
+    await connectToDatabase();
     const { fromDate, toDate } = await ValidateAndConvertDate({
       fromDateReq: req.query.fromDate,
       toDateReq: req.query.toDate,
@@ -275,6 +281,7 @@ export const getProductsQuantity = asyncHandler(async (req, res, next) => {
   //param: fromDate, toDate, type, limitProduct, limit, page, sort
 
   try {
+    await connectToDatabase();
     const { fromDate, toDate } = await ValidateAndConvertDate({
       fromDateReq: req.query.fromDate,
       toDateReq: req.query.toDate,
@@ -361,6 +368,7 @@ export const getCustomer = asyncHandler(async (req, res, next) => {
   //param: fromDate, toDate, type, limit, page
 
   try {
+    await connectToDatabase();
     const { fromDate, toDate } = await ValidateAndConvertDate({
       fromDateReq: req.query.fromDate,
       toDateReq: req.query.toDate,
@@ -446,6 +454,7 @@ export const getCustomer = asyncHandler(async (req, res, next) => {
 
 export const getTopSelling = asyncHandler(async (req, res, next) => {
   try {
+    await connectToDatabase();
     const limitProduct = await validateAndConvertPositiveInteger(
       req.query.limitProduct,
       "Limit Product"

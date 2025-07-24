@@ -103,18 +103,7 @@ export const createOrder = asyncHandler(async (req, res, next) => {
       status: "Paid",
     });
 
-    // Save the order to the database
-    await newOrder.save();
-
-    // Clear the cart
-    const cart = await Cart.findOne({ user: req.user._id });
-    if (cart) {
-      cart.products = [];
-      cart.totalPrice = 0;
-      await cart.save();
-    }
-
-    // Update the quantity of the products in the database
+    // Check all items before updating any product stock
     for (let i = 0; i < orderItems.length; i++) {
       const product = await Product.findById(orderItems[i].product);
       if (!product) {
@@ -133,17 +122,37 @@ export const createOrder = asyncHandler(async (req, res, next) => {
         throw error;
       }
 
-      // Trừ số lượng sản phẩm trong biến thể tương ứng
-      product.variants[variantIndex].countInStock -= orderItems[i].quantity;
+      if (
+        product.variants[variantIndex].countInStock < orderItems[i].quantity
+      ) {
+        const error = new Error(
+          `Only ${product.variants[variantIndex].countInStock} stocks available for ${product.name} (${orderItems[i].size}, ${orderItems[i].color})`
+        );
 
-      if (product.variants[variantIndex].countInStock < 0) {
-        const error = new Error("Not enough stock available");
         error.statusCode = 400;
         throw error;
       }
+    }
+    // All items passed, now update stock
+    for (let i = 0; i < orderItems.length; i++) {
+      const product = await Product.findById(orderItems[i].product);
+      const variantIndex = product.variants.findIndex(
+        (v) => v.size === orderItems[i].size && v.color === orderItems[i].color
+      );
+      product.variants[variantIndex].countInStock -= orderItems[i].quantity;
 
-      // Lưu lại sản phẩm vào database
+
       await product.save();
+    }
+    // Save the order to the database
+    await newOrder.save();
+
+    // Clear the cart
+    const cart = await Cart.findOne({ user: req.user._id });
+    if (cart) {
+      cart.products = [];
+      cart.totalPrice = 0;
+      await cart.save();
     }
 
     res.status(201).json({
